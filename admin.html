@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        #login, #dashboard { display: none; }
+        .container { margin: auto; max-width: 600px; }
+        h1 { text-align: center; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <div id="login">
+            <h2>Login</h2>
+            <form onsubmit="return login();">
+                <label for="username">Username:</label>
+                <input type="text" id="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        <div id="dashboard">
+            <h2>Dashboard</h2>
+            <button onclick="logout();">Logout</button>
+            <h3>Business Data Management</h3>
+            <form id="businessForm" onsubmit="return saveBusinessData();">
+                <label for="businessName">Business Name:</label>
+                <input type="text" id="businessName" required>
+                <button type="submit">Save</button>
+            </form>
+            <h3>Services Management</h3>
+            <form id="serviceForm" onsubmit="return saveService();">
+                <label for="serviceName">Service Name:</label>
+                <input type="text" id="serviceName" required>
+                <button type="submit">Add Service</button>
+            </form>
+            <h3>Team Management</h3>
+            <form id="teamForm" onsubmit="return saveTeamMember();">
+                <label for="teamMember">Team Member Name:</label>
+                <input type="text" id="teamMember" required>
+                <button type="submit">Add Team Member</button>
+            </form>
+            <h3>Opening Hours</h3>
+            <form id="hoursForm" onsubmit="return saveOpeningHours();">
+                <label for="openingHours">Opening Hours:</label>
+                <input type="text" id="openingHours" required>
+                <button type="submit">Save Hours</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username === 'admin' && password === 'admin123') {
+                localStorage.setItem('loggedIn', 'true');
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            } else {
+                alert('Invalid login credentials.');
+            }
+            return false;
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            document.getElementById('login').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+
+        function saveBusinessData() {
+            const businessName = document.getElementById('businessName').value;
+            localStorage.setItem('businessName', businessName);
+            alert('Business data saved!');
+            return false;
+        }
+
+        function saveService() {
+            const serviceName = document.getElementById('serviceName').value;
+            let services = JSON.parse(localStorage.getItem('services')) || [];
+            services.push(serviceName);
+            localStorage.setItem('services', JSON.stringify(services));
+            alert('Service added!');
+            return false;
+        }
+
+        function saveTeamMember() {
+            const teamMember = document.getElementById('teamMember').value;
+            let team = JSON.parse(localStorage.getItem('team')) || [];
+            team.push(teamMember);
+            localStorage.setItem('team', JSON.stringify(team));
+            alert('Team member added!');
+            return false;
+        }
+
+        function saveOpeningHours() {
+            const openingHours = document.getElementById('openingHours').value;
+            localStorage.setItem('openingHours', openingHours);
+            alert('Opening hours saved!');
+            return false;
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('loggedIn')) {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            } else {
+                document.getElementById('login').style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>
